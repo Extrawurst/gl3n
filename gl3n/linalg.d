@@ -1882,6 +1882,10 @@ struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) {
         masm!(op)(inp, this);
     }
 
+    void opOpAssign(string op)(Matrix inp) if(op == "*") {
+        this = this * inp;
+    }
+
     unittest {
         mat2 m2 = mat2(1.0f, 2.0f, 3.0f, 4.0f);
         vec2 v2 = vec2(2.0f, 2.0f);
@@ -1916,6 +1920,14 @@ struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) {
         assert(m3.matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f]]);
 
         //TODO: tests for mat4, mat34
+    }
+
+    unittest
+    {
+        auto m1 = mat4.translation(0,1,2);
+        m1 *= mat4.translation(0,-1,2);
+
+        assert(m1 == mat4.translation(0,0,4));
     }
 
     // opEqual => "alias matrix this;"
